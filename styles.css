@@ -158,6 +158,10 @@ h1, h2, h3, h4, h5, h6 {
     gap: 1rem;
 }
 
+.trocaIcone {
+    background-image: url('./imagens/pause.png');
+}
+
 .app__footer {
     display: flex;
     width: 100%;
