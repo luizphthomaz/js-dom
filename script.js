@@ -6,16 +6,23 @@ const banner = document.querySelector('.app__image')
 const titulo = document.querySelector('.app__title')
 const botoes = document.querySelectorAll('.app__card-button')
 const musicaFocoInput = document.querySelector('#alternar-musica')
+const checkboxMusica = document.querySelector('.toggle-switch')
 const btnComecar = document.querySelector('#start-pause')
 const iconeStart = document.querySelector('.app__card-primary-butto-icon')
+const textoComecar = document.querySelector('#textoComecar')
+const btnReiniciar = document.querySelector('#restart')
+const tempoNaTela = document.querySelector('#timer')
 
-let tempoDecorridoEmSegundos = 5
+
+let tempoDecorridoEmSegundos = 1500
 let intervaloId = null
 
 
 // salvando o áudio em uma variável
 const musica = new Audio('./sons/luna-rise-part-one.mp3')
 const playTemporizador = new Audio('./sons/play.wav')
+const pauseTemporizador = new Audio('./sons/pause.mp3')
+const fimTemporizador = new Audio('./sons/beep.mp3')
 
 // para o aúdio ser tocado o tempo todo
 musica.loop = true
@@ -80,25 +87,74 @@ function alterarContexto(contexto) {
 const contagemRegressiva = () => {
     if (tempoDecorridoEmSegundos <= 0) {
         zerar()
-        alert('Tempo esgotado')
+        musica.pause()
+        musica.currentTime = 0
+        checkboxMusica.disabled = true
+        checkboxMusica.classList.add('desabilitado')
+        // fimTemporizador.play()
+
+        // desabilita o botão começar para não ser clicado novamente
+        btnComecar.disabled = true
+        btnComecar.classList.add('desabilitado')
+
+        setTimeout(() => {
+            btnReiniciar.style.display = 'flex'
+        }, 2000)
+        
+        btnReiniciar.addEventListener('click', () => {
+            location.reload()
+        })
         return
     }
-    tempoDecorridoEmSegundos -= 1
+
+    // contagem decrescente de 1 em 1
+    tempoDecorridoEmSegundos--
     console.log(`Temporizador: ${tempoDecorridoEmSegundos}`);
+    monstrarTempo()
 }
 
 btnComecar.addEventListener('click', iniciarOuPausar)
 
+// variável bandeira para sinalizar quando der start ou pausa
+let flag = 0
+
 function iniciarOuPausar() {
+
+    // quando flag for zero === start e atualizar flag para 1.
+    if (flag === 0) {
+
+        flag = 1
+        playTemporizador.play()
+        iconeStart.setAttribute('src', './imagens/pause.png')
+        textoComecar.textContent = 'Pausar'
+
+        // quando flag for 1 === pausar o temporizador e atualizar flag para zero novamente
+    } else {
+
+        flag = 0
+        pauseTemporizador.play()
+        iconeStart.setAttribute('src', './imagens/play_arrow.png')
+        textoComecar.textContent = 'Continuar'
+    }
+
     if (intervaloId) {
         zerar()
         return
     }
-    playTemporizador.play()
+
     intervaloId = setInterval(contagemRegressiva, 1000);
 }
 
 function zerar() {
     clearInterval(intervaloId)
     intervaloId = null
+
 }
+
+function monstrarTempo() {
+    const tempo = tempoDecorridoEmSegundos
+    tempoNaTela.innerHTML = `${tempo}`
+}
+
+
+monstrarTempo()
