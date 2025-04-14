@@ -12,17 +12,43 @@ const iconeStart = document.querySelector('.app__card-primary-butto-icon')
 const textoComecar = document.querySelector('#textoComecar')
 const btnReiniciar = document.querySelector('#restart')
 const tempoNaTela = document.querySelector('#timer')
-
+const menuDeMusicas = document.querySelector('.menu-musicas')
+const listaDeMusicas = document.querySelector('#listaDeMusicas')
 
 let tempoDecorridoEmSegundos = 1500
 let intervaloId = null
 
 
 // salvando o áudio em uma variável
-const musica = new Audio('./sons/luna-rise-part-one.mp3')
+let musica = new Audio('./sons/luna-rise-part-one.mp3')
+
 const playTemporizador = new Audio('./sons/play.wav')
 const pauseTemporizador = new Audio('./sons/pause.mp3')
 const fimTemporizador = new Audio('./sons/beep.mp3')
+
+let bandeira = 0
+menuDeMusicas.addEventListener('click', () => {
+    
+        if (bandeira == 0) {
+            listaDeMusicas.style.display = 'inline-block'
+            bandeira = 1
+            
+        } else {
+            listaDeMusicas.style.display = 'none'
+            bandeira = 0
+        }
+
+})
+
+listaDeMusicas.addEventListener('change', (event) => {
+
+    // quando o usuário trocar de música
+    const novaMusica = event.target.value
+    musica.src = novaMusica
+
+    // checkbox desmarcado 
+    musicaFocoInput.checked = false
+})
 
 // para o aúdio ser tocado o tempo todo
 musica.loop = true
@@ -39,21 +65,34 @@ musicaFocoInput.addEventListener('change', () => {
 
 btnFoco.addEventListener('click', () => {
 
+    // 25 minutos convertidos em segundos
+    tempoDecorridoEmSegundos = 1500
     alterarContexto('foco')
     btnFoco.classList.add('active')
+    
 })
 
 btnCurto.addEventListener('click', () => {
+    // 5 minutos convertidos em segundos
+    tempoDecorridoEmSegundos = 300
     alterarContexto('descanso-curto')
     btnCurto.classList.add('active')
+
 })
 
 btnLongo.addEventListener('click', () => {
+    // 15 minutos convertidos em segundos
+    tempoDecorridoEmSegundos = 900
     alterarContexto('descanso-longo')
     btnLongo.classList.add('active')
+    
+    if (btnComecar.click == true) {
+        btnFoco.disabled = true
+    }
 })
 
 function alterarContexto(contexto) {
+    mostrarTempo()
     botoes.forEach(function(contexto) {
         contexto.classList.remove('active')
     })
@@ -70,6 +109,7 @@ function alterarContexto(contexto) {
         case 'descanso-curto':
             titulo.innerHTML = `Que tal dar uma respirada?<br>
                 <strong class="app__title-strong">Faça uma pausa curta.</strong>`
+            
 
         break;
 
@@ -91,7 +131,7 @@ const contagemRegressiva = () => {
         musica.currentTime = 0
         checkboxMusica.disabled = true
         checkboxMusica.classList.add('desabilitado')
-        // fimTemporizador.play()
+        fimTemporizador.play()
 
         // desabilita o botão começar para não ser clicado novamente
         btnComecar.disabled = true
@@ -109,8 +149,7 @@ const contagemRegressiva = () => {
 
     // contagem decrescente de 1 em 1
     tempoDecorridoEmSegundos--
-    console.log(`Temporizador: ${tempoDecorridoEmSegundos}`);
-    monstrarTempo()
+    mostrarTempo()
 }
 
 btnComecar.addEventListener('click', iniciarOuPausar)
@@ -119,6 +158,21 @@ btnComecar.addEventListener('click', iniciarOuPausar)
 let flag = 0
 
 function iniciarOuPausar() {
+
+    // se não estiver com a classe active será desabilitado
+    if (!btnFoco.classList.contains('active')) {
+        btnFoco.disabled = true
+        btnFoco.classList.add('desabilitado')
+    }
+    if (!btnCurto.classList.contains('active')) {
+        btnCurto.disabled = true
+        btnCurto.classList.add('desabilitado')
+    }
+    if (!btnLongo.classList.contains('active')) {
+        btnLongo.disabled = true
+        btnLongo.classList.add('desabilitado')
+    }
+
 
     // quando flag for zero === start e atualizar flag para 1.
     if (flag === 0) {
@@ -151,10 +205,18 @@ function zerar() {
 
 }
 
-function monstrarTempo() {
-    const tempo = tempoDecorridoEmSegundos
-    tempoNaTela.innerHTML = `${tempo}`
+function mostrarTempo() {
+    const tempo = new Date(tempoDecorridoEmSegundos * 1000 )
+
+    // colocar minutos em formato string
+    const tempoFormatado = tempo.toLocaleTimeString('pt-Br', {minute: '2-digit', second: '2-digit'})
+    tempoNaTela.innerHTML = `${tempoFormatado}`
+
 }
+mostrarTempo()
 
-
-monstrarTempo()
+function habilitarBotoes() {
+    btnFoco.disabled = false
+    btnCurto.disabled = false
+    btnLongo.disabled = false
+}
