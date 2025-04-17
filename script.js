@@ -22,20 +22,22 @@ let intervaloId = null
 // salvando o áudio em uma variável
 let musica = new Audio('./sons/luna-rise-part-one.mp3')
 
-const playTemporizador = new Audio('./sons/play.wav')
-const pauseTemporizador = new Audio('./sons/pause.mp3')
-const fimTemporizador = new Audio('./sons/beep.mp3')
+function tocarAudio(caminho) {
+    const som = new Audio(caminho)
+    som.play()
+}
 
-let bandeira = 0
+
+let menuMusicasAberto = false
 menuDeMusicas.addEventListener('click', () => {
     
-        if (bandeira == 0) {
+        if (menuMusicasAberto == false) {
             listaDeMusicas.style.display = 'inline-block'
-            bandeira = 1
+            menuMusicasAberto = true
             
         } else {
             listaDeMusicas.style.display = 'none'
-            bandeira = 0
+            menuMusicasAberto = false
         }
 
 })
@@ -64,38 +66,26 @@ musicaFocoInput.addEventListener('change', () => {
 
 
 btnFoco.addEventListener('click', () => {
-
-    // 25 minutos convertidos em segundos
-    tempoDecorridoEmSegundos = 1500
-    alterarContexto('foco')
-    btnFoco.classList.add('active')
-    
+    selecionarModo(1500, 'foco', btnFoco)
 })
 
 btnCurto.addEventListener('click', () => {
-    // 5 minutos convertidos em segundos
-    tempoDecorridoEmSegundos = 300
-    alterarContexto('descanso-curto')
-    btnCurto.classList.add('active')
-
+    selecionarModo(300, 'descanso-curto', btnCurto)
 })
 
 btnLongo.addEventListener('click', () => {
-    // 15 minutos convertidos em segundos
-    tempoDecorridoEmSegundos = 900
-    alterarContexto('descanso-longo')
-    btnLongo.classList.add('active')
-    
-    if (btnComecar.click == true) {
-        btnFoco.disabled = true
-    }
+    selecionarModo(900, 'descanso-longo', btnLongo)
 })
+
+function selecionarModo(tempo, contexto, botaoSelecionado) {
+    tempoDecorridoEmSegundos = tempo
+    alterarContexto(contexto)
+    botoes.forEach(botao => botao.classList.remove('active'))
+    botaoSelecionado.classList.add('active')
+}
 
 function alterarContexto(contexto) {
     mostrarTempo()
-    botoes.forEach(function(contexto) {
-        contexto.classList.remove('active')
-    })
 
     html.setAttribute('data-contexto', contexto)
     banner.setAttribute('src', `./imagens/${contexto}.png`)
@@ -131,7 +121,9 @@ const contagemRegressiva = () => {
         musica.currentTime = 0
         checkboxMusica.disabled = true
         checkboxMusica.classList.add('desabilitado')
-        fimTemporizador.play()
+
+        // final do temporizador
+        tocarAudio('./sons/beep.mp3')
 
         // desabilita o botão começar para não ser clicado novamente
         btnComecar.disabled = true
@@ -155,7 +147,7 @@ const contagemRegressiva = () => {
 btnComecar.addEventListener('click', iniciarOuPausar)
 
 // variável bandeira para sinalizar quando der start ou pausa
-let flag = 0
+let temporizadorAtivo = false
 
 function iniciarOuPausar() {
 
@@ -174,19 +166,22 @@ function iniciarOuPausar() {
     }
 
 
-    // quando flag for zero === start e atualizar flag para 1.
-    if (flag === 0) {
+    // quando temporizador não estiver ativado === start e atualizar para true.
+    if (temporizadorAtivo === false) {
 
-        flag = 1
-        playTemporizador.play()
+        temporizadorAtivo = true
+
+        // play no temporizador
+        tocarAudio('./sons/play.wav')
         iconeStart.setAttribute('src', './imagens/pause.png')
         textoComecar.textContent = 'Pausar'
 
-        // quando flag for 1 === pausar o temporizador e atualizar flag para zero novamente
     } else {
 
-        flag = 0
-        pauseTemporizador.play()
+        temporizadorAtivo = false
+
+        // pause no temporizador
+        tocarAudio('./sons/pause.mp3')
         iconeStart.setAttribute('src', './imagens/play_arrow.png')
         textoComecar.textContent = 'Continuar'
     }
@@ -206,6 +201,7 @@ function zerar() {
 }
 
 function mostrarTempo() {
+    // multiplicado o tempo que está em milisegundos para minutos
     const tempo = new Date(tempoDecorridoEmSegundos * 1000 )
 
     // colocar minutos em formato string
@@ -215,8 +211,3 @@ function mostrarTempo() {
 }
 mostrarTempo()
 
-function habilitarBotoes() {
-    btnFoco.disabled = false
-    btnCurto.disabled = false
-    btnLongo.disabled = false
-}
