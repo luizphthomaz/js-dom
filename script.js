@@ -129,6 +129,7 @@ const contagemRegressiva = () => {
         btnComecar.disabled = true
         btnComecar.classList.add('desabilitado')
 
+        // depois de 2 segundos aparece o botão reiniciar
         setTimeout(() => {
             btnReiniciar.style.display = 'flex'
         }, 2000)
