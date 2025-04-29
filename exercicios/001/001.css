@@ -1,0 +1,15 @@
+.trocar {
+    background-color: black;
+}
+
+#btnTrocar {
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+    
+}
