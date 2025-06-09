@@ -30,7 +30,7 @@ function tocarAudio(caminho) {
 
 let menuMusicasAberto = false
 menuDeMusicas.addEventListener('click', () => {
-    
+
         if (menuMusicasAberto == false) {
             listaDeMusicas.style.display = 'inline-block'
             menuMusicasAberto = true
