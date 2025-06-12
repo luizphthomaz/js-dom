@@ -2,6 +2,7 @@ const btnAdicionarTarefa = document.querySelector(".app__button--add-task");
 const formularioTarefa = document.querySelector(".app__form-add-task");
 const textarea = document.querySelector(".app__form-textarea");
 const ulTarefas = document.querySelector(".app__section-task-list"); // Seleciona a lista de tarefas
+const paragrafoDescricaoTarefa = document.querySelector('.app__section-active-task-description')
 
 const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [] // Recupera as tarefas do localStorage (inverso do stringfy) ou inicializa como um array vazio;
 
@@ -52,12 +53,18 @@ function criarTarefa(tarefa) {
     botao.append(imagemBotao)
     li.append(svg, paragrafo, botao); // Adiciona o SVG, o parágrafo e o botão ao <li>
 
+    li.onclick = () => {
+        paragrafoDescricaoTarefa.textContent = tarefa.descricao
+        li.classList.add('app__section-task-list-item-active')
+    }
+
     return li; // Retorna o elemento <li> completo
 }
 
 btnAdicionarTarefa.addEventListener("click", () => {
     // Faz a alternância entre mostrar e esconder o formulário de adicionar tarefa
     formularioTarefa.classList.toggle("hidden");
+    textarea.focus()
 })
 
 // 
@@ -83,4 +90,13 @@ tarefas.forEach(tarefa => {
     const elementoTarefa = criarTarefa(tarefa); // Cria a tarefa na lista
     ulTarefas.append(elementoTarefa); // Adiciona a tarefa à lista de tarefas
 })
- 
+
+function limparFormulario() {
+    textarea.value = ''
+    formularioTarefa.classList.add('hidden')
+}
+
+
+const btnCancelar = document.querySelector('.app__form-footer__button--cancel')
+
+btnCancelar.addEventListener('click', limparFormulario)
