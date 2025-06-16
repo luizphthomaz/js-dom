@@ -6,6 +6,8 @@ const paragrafoDescricaoTarefa = document.querySelector('.app__section-active-ta
 
 const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [] // Recupera as tarefas do localStorage (inverso do stringfy) ou inicializa como um array vazio;
 
+let tarefaSelecionada = null
+
 function atualizarTarefas() {
     localStorage.setItem('tarefas', JSON.stringify(tarefas)) // Salva as tarefas no localStorage 
 }
@@ -40,7 +42,7 @@ function criarTarefa(tarefa) {
             tarefa.descricao = novaDescricao
            atualizarTarefas()
        } else {
-        alert('Digite uma nova tarefa!')
+        exibirMensagem('Digite uma nova tarefa!')
        }
 
 
@@ -54,7 +56,20 @@ function criarTarefa(tarefa) {
     li.append(svg, paragrafo, botao); // Adiciona o SVG, o parágrafo e o botão ao <li>
 
     li.onclick = () => {
+         document.querySelectorAll('.app__section-task-list-item-active')
+            .forEach(elemento => {
+                elemento.classList.remove('app__section-task-list-item-active')
+            })
+            
+        if (tarefaSelecionada == tarefa) {
+            paragrafoDescricaoTarefa.textContent = ''
+            tarefaSelecionada = null
+            return
+        }
+
+        tarefaSelecionada = tarefa
         paragrafoDescricaoTarefa.textContent = tarefa.descricao
+       
         li.classList.add('app__section-task-list-item-active')
     }
 
@@ -96,7 +111,20 @@ function limparFormulario() {
     formularioTarefa.classList.add('hidden')
 }
 
+function exibirMensagem(texto, duracao = 3000) {
+  const div = document.getElementById('mensagem');
+  div.textContent = texto;
+  div.classList.add('visivel');
+
+  setTimeout(() => {
+    div.classList.remove('visivel');
+  }, duracao);
+}
+
+
 
 const btnCancelar = document.querySelector('.app__form-footer__button--cancel')
 
 btnCancelar.addEventListener('click', limparFormulario)
+
+

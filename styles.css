@@ -534,6 +534,25 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 }
 
+.mensagem-erro {
+  position: fixed;
+  top: 50%;
+  right: 20px;
+  background-color: var(--lils);
+  color: var(--azul-profundo);
+  padding: 20px 16px;
+  border-radius: 6px;
+  font-size: 24px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1000;
+}
+.mensagem-erro.visivel {
+  opacity: 0.95;
+}
+
+
 /* Para Tablets */
 @media (max-width: 1024px) and (min-width: 768px) {
     .app__section-banner-container {
