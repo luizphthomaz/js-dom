@@ -15,7 +15,7 @@ const tempoNaTela = document.querySelector('#timer')
 const menuDeMusicas = document.querySelector('.menu-musicas')
 const listaDeMusicas = document.querySelector('#listaDeMusicas')
 
-let tempoDecorridoEmSegundos = 1500
+let tempoDecorridoEmSegundos = 5
 let intervaloId = null
 
 
@@ -66,11 +66,11 @@ musicaFocoInput.addEventListener('change', () => {
 
 
 btnFoco.addEventListener('click', () => {
-    selecionarModo(1500, 'foco', btnFoco)
+    selecionarModo(10, 'foco', btnFoco)
 })
 
 btnCurto.addEventListener('click', () => {
-    selecionarModo(300, 'descanso-curto', btnCurto)
+    selecionarModo(10, 'descanso-curto', btnCurto)
 })
 
 btnLongo.addEventListener('click', () => {

@@ -7,6 +7,7 @@ const paragrafoDescricaoTarefa = document.querySelector('.app__section-active-ta
 const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [] // Recupera as tarefas do localStorage (inverso do stringfy) ou inicializa como um array vazio;
 
 let tarefaSelecionada = null
+let liTarefaSelecionada = null
 
 function atualizarTarefas() {
     localStorage.setItem('tarefas', JSON.stringify(tarefas)) // Salva as tarefas no localStorage 
@@ -64,10 +65,12 @@ function criarTarefa(tarefa) {
         if (tarefaSelecionada == tarefa) {
             paragrafoDescricaoTarefa.textContent = ''
             tarefaSelecionada = null
+            liTarefaSelecionada = null
             return
         }
 
         tarefaSelecionada = tarefa
+        liTarefaSelecionada = li
         paragrafoDescricaoTarefa.textContent = tarefa.descricao
        
         li.classList.add('app__section-task-list-item-active')
@@ -127,4 +130,10 @@ const btnCancelar = document.querySelector('.app__form-footer__button--cancel')
 
 btnCancelar.addEventListener('click', limparFormulario)
 
-
+document.addEventListener('focoFinalizado', () => {
+    if (tarefaSelecionada && liTarefaSelecionada) {
+        liTarefaSelecionada.classList.remove('app__section-task-list-item-active')
+        liTarefaSelecionada.classList.add('app__section-task-list-item-complete')
+        liTarefaSelecionada.querySelector('button').setAttribute('disabled', 'disabled')
+    }
+})
