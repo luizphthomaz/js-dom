@@ -66,11 +66,11 @@ musicaFocoInput.addEventListener('change', () => {
 
 
 btnFoco.addEventListener('click', () => {
-    selecionarModo(10, 'foco', btnFoco)
+    selecionarModo(1500, 'foco', btnFoco)
 })
 
 btnCurto.addEventListener('click', () => {
-    selecionarModo(10, 'descanso-curto', btnCurto)
+    selecionarModo(300, 'descanso-curto', btnCurto)
 })
 
 btnLongo.addEventListener('click', () => {
@@ -117,9 +117,9 @@ function alterarContexto(contexto) {
 const contagemRegressiva = () => {
     if (tempoDecorridoEmSegundos <= 0) {
 
-        const focoAtivo = html.getAttribute('data-contexto') == 'foco'
-        if (focoAtivo) {
-            const evento = new CustomEvent('focoFinalizado')
+        // quando o determinado botão estiver ativo será disparado um evento para quando o cronômetro zerar.
+        if (btnFoco) {
+            const evento = new CustomEvent('cronometroFinalizado')
             document.dispatchEvent(evento)
         }
 
