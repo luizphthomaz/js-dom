@@ -5,6 +5,7 @@ const ulTarefas = document.querySelector(".app__section-task-list"); // Selecion
 let paragrafoDescricaoTarefa = document.querySelector('.app__section-active-task-description')
 
 const btnRemoverConcluidas = document.querySelector('#btn-remover-concluidas')
+const btnRemoverTodas = document.querySelector('#btn-remover-todas')
 
 let tarefas = JSON.parse(localStorage.getItem('tarefas')) || [] // Recupera as tarefas do localStorage (inverso do stringfy) ou inicializa como um array vazio;
 
@@ -62,6 +63,29 @@ function criarTarefa(tarefa) {
     botao.append(imagemEdit)
     li.append(svg, paragrafo, imagemExcluir, botao); // Adiciona o SVG, o parágrafo e o botão ao <li>
 
+    // exclui a tarefa específica ao clicar na lixeira
+    imagemExcluir.onclick = () => {
+        li.remove()
+        tarefa.deletado = true
+        tarefas = tarefas.filter(tarefa => !tarefa.deletado)
+        atualizarTarefas()
+    }
+
+    // remove todas as tarefas
+    btnRemoverTodas.onclick = () => {
+        const todasTarefas = document.querySelectorAll('.app__section-task-list-item')
+        
+        todasTarefas.forEach((tarefa) => {
+            tarefa.remove()
+        })
+
+        tarefas = null
+        paragrafoDescricaoTarefa.textContent = ''
+        atualizarTarefas()
+    }
+
+
+    // se a tarefa for concluída
     if (tarefa.completa) {
         li.classList.add('app__section-task-list-item-complete')
 
@@ -126,6 +150,7 @@ function limparFormulario() {
     textarea.value = ''
 }
 
+// mensangem quando clica em editar, não escreve nada
 function exibirMensagem(texto, duracao = 3000) {
   const div = document.getElementById('mensagem');
   div.textContent = texto;
@@ -174,7 +199,7 @@ document.addEventListener('cronometroFinalizado', () => {
     }
 })
 
-btnRemoverConcluidas.onclick = () => {
+const removerTarefas = (somenteCompletas) => {
     const seletor = '.app__section-task-list-item-complete'
     document.querySelectorAll(seletor).forEach(elemento => {
 
@@ -188,3 +213,6 @@ btnRemoverConcluidas.onclick = () => {
     // atualiza tarefas no localStorage
     atualizarTarefas()
 }
+
+btnRemoverConcluidas.onclick = () => removerTarefas(true)
+
