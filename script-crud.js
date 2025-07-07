@@ -38,6 +38,8 @@ function criarTarefa(tarefa) {
     const botao = document.createElement("button");
     botao.classList.add("app_button-edit");   
 
+    // edita a tarefa ao clicar no botão
+    // se a tarefa estiver vazia, exibe uma mensagem
     botao.onclick = () => {
        const novaDescricao = prompt('Qual é o nome da nova tarefa?')
        
@@ -52,7 +54,6 @@ function criarTarefa(tarefa) {
 
     }
 
-    // FALTA ADICIONAR A FUNCIONALIDADE DE EXCLUIR TAREFA
     const imagemExcluir = document.createElement("img");
 
     const imagemEdit = document.createElement("img");
@@ -79,7 +80,7 @@ function criarTarefa(tarefa) {
             tarefa.remove()
         })
 
-        tarefas = null
+        tarefas = [] // Reseta o array de tarefas
         paragrafoDescricaoTarefa.textContent = ''
         atualizarTarefas()
     }
@@ -199,7 +200,7 @@ document.addEventListener('cronometroFinalizado', () => {
     }
 })
 
-const removerTarefas = (somenteCompletas) => {
+const removerTarefas = () => {
     const seletor = '.app__section-task-list-item-complete'
     document.querySelectorAll(seletor).forEach(elemento => {
 
